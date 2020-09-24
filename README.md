@@ -88,6 +88,12 @@ try this again with the patched version of laravel that disallows such destructi
 `php artisan db:seed`
 `php artisan db:seed --class=ProductCategorySeeder` -> `Errors out warning you about foreign key constraints.`
 
+The original issue was created because even with `Schema::disableForeignKeyConstraints();` set, you could not truncate
+the table and instead got an error (which the patch restores). PG likes to ensure that constraints are always going to
+be valid. I would rather drop constraints referencing that table, do what I need to do to the table, then restore the 
+constraints afterward. I would never expect truncating a table to drop related tables, I would expect an error. Like you
+get when you try to delete a record that has a foreign key referencing it. 
+
 #### Cleanup
 
 Now we're done, feel free to `docker-compose down` and clean the files off your drive. 

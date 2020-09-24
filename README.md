@@ -9,6 +9,8 @@ container with ```docker exec -it `docker ps -f "name=pg-truncate-example_php" -
 
 ### Setup
 
+<img src="https://raw.githubusercontent.com/blakethepatton/pg-truncate-example/master/diagram.png" width="400">
+
 Once cloned, run `docker-compose up -d` to get the containers downloaded and running. Then run `php artisan migrate` 
 followed by `php artisan db:seed` this will create a sample database with 500 users, 50 products and 2000 orders with 
 payments. There are no product categories created yet because in this example, the product categories are a new feature 

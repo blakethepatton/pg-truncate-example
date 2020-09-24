@@ -77,6 +77,17 @@ it. I'd rather get an error saying, there are references to this table, you need
 table or truncate those tables too. In the meantime, just don't truncate your tables in postgres. Unless you know what 
 it's going to do. Simple enough!  
 
+#### Solution?
+
+My proposed solution is to get rid of the cascading statement of the truncate command. I would wholeheartedly rather 
+get an error warning me of what I'm about to do than to actually do it. If you check out the branch `patched` you can 
+try this again with the patched version of laravel that disallows such destruction. 
+
+`git checkout patched`
+`php artisan migrate:refresh`
+`php artisan db:seed`
+`php artisan db:seed --class=ProductCategorySeeder` -> `Errors out warning you about foreign key constraints.`
+
 #### Cleanup
 
 Now we're done, feel free to `docker-compose down` and clean the files off your drive. 

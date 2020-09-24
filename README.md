@@ -69,8 +69,10 @@ In the table structure, we have products belonging to product categories. That's
 database. However, when you truncate with raw sql, that would throw an error and not allow the truncation of the 
 `product_categories` table because it's referenced by other tables. You can drop constraints or truncate tables. 
 
-To combat that issue, [#26389](https://github.com/laravel/framework/pull/26389) added cascade to the grammar for 
-truncations. What that does is tells postgres to go ahead and truncate any tables that reference this table. 
+To combat that issue, [#26389](https://github.com/laravel/framework/pull/26389) added `cascade` to the grammar for 
+truncations. What that does is it tells postgres to go ahead and truncate any tables that reference this table, and any
+additional tables until the constraints are no-longer an issue. In this example, truncating the product categories table
+causes truncations to the products table which then truncates the orders table and finally the payments table.  
 
 #### Opinion
 
@@ -86,9 +88,12 @@ get an error warning me of what I'm about to do than to actually do it. If you c
 try this again with the patched version of laravel that disallows such destruction. 
 
 `git checkout patched`
+
 `php artisan migrate:refresh`
+
 `php artisan db:seed`
-`php artisan db:seed --class=ProductCategorySeeder` -> `Errors out warning you about foreign key constraints.`
+
+`php artisan db:seed --class=ProductCategorySeeder` (Errors out warning you about foreign key constraints.)
 
 The original issue was created because even with `Schema::disableForeignKeyConstraints();` set, you could not truncate
 the table and instead got an error (which the patch restores). PG likes to ensure that constraints are always going to
